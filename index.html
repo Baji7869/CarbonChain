@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarbonChain - Web3 Carbon Credit DeFi Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪴</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="brand-icon">🪴</span>
+                <span class="brand-name">CarbonChain</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#" class="nav-link active" data-page="dashboard">Dashboard</a>
+                <a href="#" class="nav-link" data-page="tokenize">Tokenize</a>
+                <a href="#" class="nav-link" data-page="marketplace">Marketplace</a>
+                <a href="#" class="nav-link" data-page="staking">Staking</a>
+                <a href="#" class="nav-link" data-page="retirement">Retirement</a>
+                <a href="#" class="nav-link" data-page="governance">Governance</a>
+                <a href="#" class="nav-link" data-page="portfolio">Portfolio</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="btn btn--primary" id="connectWallet">
+                    <span id="walletBtnText">Connect Wallet</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard View -->
+        <div class="page-view active" id="dashboard-view">
+            <div class="hero-section">
+                <h1 class="hero-title">Tokenized Carbon Credits for a Sustainable Future</h1>
+                <p class="hero-subtitle">Trade, stake, and retire verified carbon credits on the blockchain. Join the climate action revolution with transparent, decentralized carbon markets.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card" style="background: var(--color-bg-1);">
+                    <div class="stat-icon">🌱</div>
+                    <div class="stat-value" id="totalMinted">0</div>
+                    <div class="stat-label">Total tCO2 Minted</div>
+                </div>
+                <div class="stat-card" style="background: var(--color-bg-2);">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value" id="marketVolume">$0</div>
+                    <div class="stat-label">24h Volume</div>
+                </div>
+                <div class="stat-card" style="background: var(--color-bg-3);">
+                    <div class="stat-icon">♻️</div>
+                    <div class="stat-value" id="totalRetired">0</div>
+                    <div class="stat-label">Total Retired</div>
+                </div>
+                <div class="stat-card" style="background: var(--color-bg-4);">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value" id="stakedValue">$0</div>
+                    <div class="stat-label">Total Staked</div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Market Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="price-display">
+                            <div class="current-price">
+                                <span class="price-label">tCO2 Price</span>
+                                <span class="price-value" id="currentPrice">$15.50</span>
+                                <span class="price-change positive" id="priceChange">+2.3%</span>
+                            </div>
+                        </div>
+                        <canvas id="priceChart" style="max-height: 200px; margin-top: 20px;"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Activity</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-list" id="recentActivity">
+                            <div class="activity-item">
+                                <span class="activity-icon">⏳</span>
+                                <span>Loading activities...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tokenize View -->
+        <div class="page-view" id="tokenize-view">
+            <div class="page-header">
+                <h2>Tokenize Carbon Credits</h2>
+                <p>Mint tCO2 tokens backed by verified carbon credits from official registries</p>
+            </div>
+
+            <div class="search-section">
+                <input type="text" id="projectSearch" class="form-control" placeholder="Search carbon projects...">
+                <button class="btn btn--secondary" id="searchBtn">Search</button>
+            </div>
+
+            <div class="projects-grid" id="projectsGrid">
+                <div class="loading-spinner">Loading projects...</div>
+            </div>
+        </div>
+
+        <!-- Marketplace View -->
+        <div class="page-view" id="marketplace-view">
+            <div class="page-header">
+                <h2>tCO2 Marketplace</h2>
+                <p>Trade tokenized carbon credits with instant liquidity</p>
+            </div>
+
+            <div class="marketplace-container">
+                <div class="card trading-card">
+                    <div class="card-header">
+                        <h3>Trade tCO2/USDT</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="trade-tabs">
+                            <button class="trade-tab active" data-tab="buy">Buy</button>
+                            <button class="trade-tab" data-tab="sell">Sell</button>
+                        </div>
+
+                        <div class="trade-form" id="buyForm">
+                            <div class="form-group">
+                                <label class="form-label">Amount (USDT)</label>
+                                <input type="number" class="form-control" id="buyAmount" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">You will receive (tCO2)</label>
+                                <input type="text" class="form-control" id="buyReceive" placeholder="0.00" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Slippage Tolerance</label>
+                                <div class="slippage-options">
+                                    <button class="slippage-btn active" data-slippage="0.1">0.1%</button>
+                                    <button class="slippage-btn" data-slippage="0.5">0.5%</button>
+                                    <button class="slippage-btn" data-slippage="1">1%</button>
+                                </div>
+                            </div>
+                            <button class="btn btn--primary btn--full-width" id="executeBuy">Buy tCO2</button>
+                        </div>
+
+                        <div class="trade-form hidden" id="sellForm">
+                            <div class="form-group">
+                                <label class="form-label">Amount (tCO2)</label>
+                                <input type="number" class="form-control" id="sellAmount" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">You will receive (USDT)</label>
+                                <input type="text" class="form-control" id="sellReceive" placeholder="0.00" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Slippage Tolerance</label>
+                                <div class="slippage-options">
+                                    <button class="slippage-btn active" data-slippage="0.1">0.1%</button>
+                                    <button class="slippage-btn" data-slippage="0.5">0.5%</button>
+                                    <button class="slippage-btn" data-slippage="1">1%</button>
+                                </div>
+                            </div>
+                            <button class="btn btn--primary btn--full-width" id="executeSell">Sell tCO2</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Trades</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="trades-list" id="tradesList">
+                            <div class="loading-spinner">Loading trades...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staking View -->
+        <div class="page-view" id="staking-view">
+            <div class="page-header">
+                <h2>Stake tCO2 Tokens</h2>
+                <p>Earn rewards by staking your carbon credits</p>
+            </div>
+
+            <div class="staking-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Staking Pool Stats</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <span class="stat-label">Current APY</span>
+                                <span class="stat-value">12%</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Total Staked</span>
+                                <span class="stat-value" id="totalStakedAmount">0 tCO2</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Your Staked</span>
+                                <span class="stat-value" id="userStaked">0 tCO2</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Earned Rewards</span>
+                                <span class="stat-value" id="earnedRewards">0 tCO2</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="staking-actions">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Stake Tokens</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Amount to Stake</label>
+                                <input type="number" class="form-control" id="stakeAmount" placeholder="0.00">
+                                <small class="form-hint">Balance: <span id="stakingBalance">0</span> tCO2</small>
+                            </div>
+                            <button class="btn btn--primary btn--full-width" id="stakeBtn">Stake</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Unstake Tokens</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Amount to Unstake</label>
+                                <input type="number" class="form-control" id="unstakeAmount" placeholder="0.00">
+                            </div>
+                            <button class="btn btn--secondary btn--full-width" id="unstakeBtn">Unstake</button>
+                            <button class="btn btn--outline btn--full-width" id="claimRewardsBtn" style="margin-top: 10px;">Claim Rewards</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Retirement View -->
+        <div class="page-view" id="retirement-view">
+            <div class="page-header">
+                <h2>Retire Carbon Credits</h2>
+                <p>Burn tCO2 tokens to offset your carbon footprint and receive a Proof of Retirement certificate</p>
+            </div>
+
+            <div class="retirement-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Retire Tokens</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Amount to Retire (tCO2)</label>
+                            <input type="number" class="form-control" id="retireAmount" placeholder="0.00">
+                            <small class="form-hint">Balance: <span id="retirementBalance">0</span> tCO2</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Retirement Reason (Optional)</label>
+                            <textarea class="form-control" id="retireReason" rows="3" placeholder="e.g., Offsetting company emissions for Q4 2024"></textarea>
+                        </div>
+                        <div class="retirement-info">
+                            <p>⚠️ This action is irreversible. Tokens will be permanently burned.</p>
+                            <p>✅ You will receive an on-chain Proof of Retirement certificate stored on IPFS.</p>
+                        </div>
+                        <button class="btn btn--primary btn--full-width" id="retireBtn">Retire Tokens</button>
+                    </div>
+                </div>
+
+                <div class="card" id="porCard" style="display: none;">
+                    <div class="card-header">
+                        <h3>Proof of Retirement Certificate</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="por-certificate" id="porCertificate">
+                            <div class="por-header">🌍 CARBON OFFSET CERTIFICATE</div>
+                            <div class="por-content">
+                                <p><strong>Certificate ID:</strong> <span id="porId"></span></p>
+                                <p><strong>Amount Retired:</strong> <span id="porAmount"></span> tCO2</p>
+                                <p><strong>Date:</strong> <span id="porDate"></span></p>
+                                <p><strong>Wallet:</strong> <span id="porWallet"></span></p>
+                                <p><strong>IPFS Hash:</strong> <span id="porIpfs"></span></p>
+                            </div>
+                            <button class="btn btn--secondary" id="downloadPor">Download Certificate</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Your Retirement History</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="retirement-history" id="retirementHistory">
+                            <p class="empty-state">No retirement history yet. Retire tokens to start offsetting your carbon footprint.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Governance View -->
+        <div class="page-view" id="governance-view">
+            <div class="page-header">
+                <h2>DAO Governance</h2>
+                <p>Vote on proposals and shape the future of CarbonChain</p>
+            </div>
+
+            <div class="governance-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Treasury Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <span class="stat-label">Treasury Balance</span>
+                                <span class="stat-value">125,000 tCO2</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Active Proposals</span>
+                                <span class="stat-value" id="activeProposals">2</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Your Voting Power</span>
+                                <span class="stat-value" id="votingPower">0 votes</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="proposals-list" id="proposalsList">
+                    <div class="loading-spinner">Loading proposals...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portfolio View -->
+        <div class="page-view" id="portfolio-view">
+            <div class="page-header">
+                <h2>Your Portfolio</h2>
+                <p>Track your carbon credit holdings and transaction history</p>
+            </div>
+
+            <div class="portfolio-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Holdings</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="holdings-grid">
+                            <div class="holding-item">
+                                <div class="holding-icon">🌱</div>
+                                <div class="holding-details">
+                                    <span class="holding-name">tCO2 Balance</span>
+                                    <span class="holding-amount" id="portfolioBalance">0</span>
+                                </div>
+                            </div>
+                            <div class="holding-item">
+                                <div class="holding-icon">💰</div>
+                                <div class="holding-details">
+                                    <span class="holding-name">Staked tCO2</span>
+                                    <span class="holding-amount" id="portfolioStaked">0</span>
+                                </div>
+                            </div>
+                            <div class="holding-item">
+                                <div class="holding-icon">📊</div>
+                                <div class="holding-details">
+                                    <span class="holding-name">Total Value</span>
+                                    <span class="holding-amount" id="portfolioValue">$0</span>
+                                </div>
+                            </div>
+                            <div class="holding-item">
+                                <div class="holding-icon">♻️</div>
+                                <div class="holding-details">
+                                    <span class="holding-name">Total Retired</span>
+                                    <span class="holding-amount" id="portfolioRetired">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Transaction History</h3>
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-filter="all">All</button>
+                            <button class="filter-tab" data-filter="mint">Mint</button>
+                            <button class="filter-tab" data-filter="trade">Trade</button>
+                            <button class="filter-tab" data-filter="stake">Stake</button>
+                            <button class="filter-tab" data-filter="retire">Retire</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="transaction-list" id="transactionHistory">
+                            <p class="empty-state">No transactions yet. Start by connecting your wallet and minting some tCO2 tokens.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Chatbot Widget -->
+    <div class="chatbot-widget" id="chatbot">
+        <button class="chatbot-toggle" id="chatbotToggle">
+            <span class="chatbot-icon">💬</span>
+        </button>
+        <div class="chatbot-window hidden" id="chatbotWindow">
+            <div class="chatbot-header">
+                <h4>Carbon Credit Assistant</h4>
+                <button class="chatbot-close" id="chatbotClose">✕</button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="chatbot-message bot">
+                    <p>👋 Hello! I'm your CarbonChain assistant. I can help you with:
+                    <br>• Understanding carbon credits
+                    <br>• Tokenization process
+                    <br>• Trading and staking
+                    <br>• Retirement certificates
+                    <br><br>How can I help you today?</p>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="Ask about carbon credits..." />
+                <button id="chatbotSend">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay hidden" id="loadingOverlay">
+        <div class="loading-spinner-large"></div>
+        <p>Processing transaction...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="api.js"></script>
+    <script src="contracts.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
